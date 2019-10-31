@@ -1,0 +1,52 @@
+<ion-header>
+  <ion-toolbar color="primary" class="ion-text-center">
+    <ion-title>Ripple Tracker</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-grid>
+    <ion-row justify-content-center margin-bottom>
+      <ion-img src="assets/imgs/xrp.png" style="height: 250px"></ion-img>
+    </ion-row>
+    <ion-row justify-content-center>
+      <div *ngIf="ripple$ | async as xrp; else loading" class="ion-text-center">
+        <h1> XRP: {{xrp.ask | currency: fiat + " "}} </h1>
+        <p> The average price last week was : {{xrp.averages.week | currency : fiat +" "}} </p>
+        <p> The average price last day was : {{xrp.averages.day | currency : fiat +" "}} </p>
+        <p>The average price last month was: {{xrp.averages.month | currency : fiat+" "}}</p>
+        <form>
+          <ion-item *ngIf="ripple$ | async as xrp; else loading">
+            <ion-label>XRP</ion-label>
+            <ion-input type="number" value="{{nbrfiat / xrp.ask}}" [(ngModel)]="nbrxrp" name="crypto"></ion-input> 
+            {{nbrxrp* xrp.ask}}
+            <ion-input type="number"  value= "{{nbrxrp * xrp.ask}}" [(ngModel)]="nbrfiat" name="crypto"></ion-input> 
+          </ion-item>
+        </form>
+
+
+      </div>
+      <ng-template #loading>
+        <h1> Loading...</h1>
+      </ng-template >
+    </ion-row>
+    <ion-row justify-content-center>
+      <ion-button shape="round" fill="outline" (click)="getXrpPrice()">
+        <ion-icon slot="icon-only" name="refresh"></ion-icon>
+      </ion-button>
+    </ion-row>
+  </ion-grid>
+
+  
+</ion-content>
+
+<ion-footer>
+  <ion-item>
+    <ion-label>Select Fiat Currency</ion-label>
+    <ion-select [(ngModel)]="fiat" (ionChange)="getXrpPrice()">
+      <ion-select-option value="USD">USD</ion-select-option>
+      <ion-select-option value="EUR">EUR</ion-select-option>
+      <ion-select-option value="TND">TND</ion-select-option>
+    </ion-select>
+  </ion-item>
+</ion-footer>

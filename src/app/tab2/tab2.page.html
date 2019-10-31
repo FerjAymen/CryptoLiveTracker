@@ -1,0 +1,50 @@
+<ion-header>
+  <ion-toolbar color="primary" class="ion-text-center">
+    <ion-title>Ethereum Tracker</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-grid>
+    <ion-row justify-content-center margin-bottom>
+      <ion-img src="assets/imgs/eth.png" style="height: 250px"></ion-img>
+    </ion-row>
+    <ion-row justify-content-center>
+      <div *ngIf="ethereum$ | async as eth; else loading" class="ion-text-center">
+        <h1> ETH: {{eth.ask | currency: fiat + " "}} </h1>
+        <p> The average price last week was : {{eth.averages.week | currency : fiat +" "}} </p>
+        <p> The average price last day was : {{eth.averages.day | currency : fiat +" "}} </p>
+        <p> The average price last month was: {{eth.averages.month | currency : fiat+" "}}</p>
+        <form>
+          <ion-item *ngIf="ethereum$ | async as eth; else loading">
+            <ion-label>ETH</ion-label>
+            <ion-input type="number" value="{{nbrfiat / eth.ask}}" [(ngModel)]="nbreth" name="crypto"></ion-input> 
+            {{nbreth* eth.ask}}
+            <ion-input type="number"  value= "{{nbreth* eth.ask}}" [(ngModel)]="nbrfiat" name="crypto"></ion-input> 
+          </ion-item>
+        </form>
+      </div>
+      <ng-template #loading>
+        <h1> Loading...</h1>
+      </ng-template >
+    </ion-row>
+    <ion-row justify-content-center>
+      <ion-button shape="round" fill="outline" (click)="getEthPrice()">
+        <ion-icon slot="icon-only" name="refresh"></ion-icon>
+      </ion-button>
+    </ion-row>
+  </ion-grid>
+
+  
+</ion-content>
+
+<ion-footer>
+  <ion-item>
+    <ion-label>Select Fiat Currency</ion-label>
+    <ion-select [(ngModel)]="fiat" (ionChange)="getEthPrice()">
+      <ion-select-option value="USD">USD</ion-select-option>
+      <ion-select-option value="EUR">EUR</ion-select-option>
+      <ion-select-option value="TND">TND</ion-select-option>
+    </ion-select>
+  </ion-item>
+</ion-footer>
